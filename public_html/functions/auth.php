@@ -32,5 +32,4 @@ function isAdmin() {
 function isClient() {
     return isset($_SESSION['role']) && $_SESSION['role'] === 'client';
 }
-
 ?>
