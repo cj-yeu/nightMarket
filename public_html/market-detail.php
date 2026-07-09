@@ -152,4 +152,93 @@ $market = mysqli_fetch_assoc($result);
     </div>
 </section>
 
+
+<?php
+$social_sql = "
+    SELECT *
+    FROM social_media_data
+    WHERE market_id = ?
+    AND status = 'active'
+    ORDER BY created_at DESC
+    LIMIT 3
+";
+
+$social_stmt = mysqli_prepare($conn, $social_sql);
+mysqli_stmt_bind_param($social_stmt, "i", $market_id);
+mysqli_stmt_execute($social_stmt);
+$social_result = mysqli_stmt_get_result($social_stmt);
+?>
+
+<section class="py-5 bg-light">
+    <div class="container">
+        <h3 class="fw-bold mb-4">Social Media Highlights</h3>
+
+        <?php if ($social_result && mysqli_num_rows($social_result) > 0): ?>
+
+            <div class="row g-4">
+                <?php while ($social = mysqli_fetch_assoc($social_result)): ?>
+                    <div class="col-md-4">
+                        <div class="card shadow-sm h-100">
+
+                            <?php if (!empty($social['image'])): ?>
+                                <img src="assets/uploads/social/<?php echo htmlspecialchars($social['image']); ?>" 
+                                     class="card-img-top"
+                                     style="height: 180px; object-fit: cover;">
+                            <?php else: ?>
+                                <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 180px;">
+                                    No Image
+                                </div>
+                            <?php endif; ?>
+
+                            <div class="card-body">
+                                <span class="badge bg-dark mb-2">
+                                    <?php echo htmlspecialchars($social['platform']); ?>
+                                </span>
+
+                                <h5 class="card-title">
+                                    <?php echo htmlspecialchars($social['post_title']); ?>
+                                </h5>
+
+                                <p class="card-text small">
+                                    <?php echo htmlspecialchars(substr($social['post_content'], 0, 120)); ?>...
+                                </p>
+
+                                <?php if (!empty($social['extracted_keywords'])): ?>
+                                    <p class="small mb-2">
+                                        <strong>Keywords:</strong><br>
+                                        <?php echo htmlspecialchars($social['extracted_keywords']); ?>
+                                    </p>
+                                <?php endif; ?>
+
+                                <?php if (!empty($social['mentioned_food'])): ?>
+                                    <p class="small mb-2">
+                                        <strong>Mentioned Food:</strong><br>
+                                        <?php echo htmlspecialchars($social['mentioned_food']); ?>
+                                    </p>
+                                <?php endif; ?>
+
+                                <?php if (!empty($social['post_url'])): ?>
+                                    <a href="<?php echo htmlspecialchars($social['post_url']); ?>" 
+                                       target="_blank" 
+                                       class="btn btn-outline-dark btn-sm">
+                                        View Source Post
+                                    </a>
+                                <?php endif; ?>
+                            </div>
+
+                        </div>
+                    </div>
+                <?php endwhile; ?>
+            </div>
+
+        <?php else: ?>
+
+            <div class="alert alert-info">
+                No social media highlights added for this night market yet.
+            </div>
+
+        <?php endif; ?>
+    </div>
+</section>
+
 <?php include 'includes/footer.php'; ?>

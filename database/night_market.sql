@@ -74,3 +74,42 @@ CREATE TABLE IF NOT EXISTS review_images (
     uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (review_id) REFERENCES reviews(review_id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS visit_plans (
+    plan_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    plan_title VARCHAR(150) NOT NULL,
+    plan_date DATE NOT NULL,
+    notes TEXT,
+    status ENUM('planned', 'completed', 'cancelled') NOT NULL DEFAULT 'planned',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS visit_plan_items (
+    plan_item_id INT AUTO_INCREMENT PRIMARY KEY,
+    plan_id INT NOT NULL,
+    market_id INT NOT NULL,
+    planned_time TIME,
+    sequence_no INT DEFAULT 1,
+    notes TEXT,
+    FOREIGN KEY (plan_id) REFERENCES visit_plans(plan_id) ON DELETE CASCADE,
+    FOREIGN KEY (market_id) REFERENCES night_markets(market_id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS social_media_data (
+    social_data_id INT AUTO_INCREMENT PRIMARY KEY,
+    market_id INT,
+    platform ENUM('Facebook', 'Instagram', 'TikTok', 'Xiaohongshu', 'Other') NOT NULL,
+    post_url VARCHAR(255),
+    post_title VARCHAR(150),
+    post_content TEXT,
+    extracted_keywords VARCHAR(255),
+    mentioned_food VARCHAR(150),
+    image VARCHAR(255),
+    status ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
+    added_by INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (market_id) REFERENCES night_markets(market_id) ON DELETE SET NULL,
+    FOREIGN KEY (added_by) REFERENCES users(user_id) ON DELETE SET NULL
+);
