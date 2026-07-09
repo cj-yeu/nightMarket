@@ -1,0 +1,42 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.hero-section {
+    background: linear-gradient(135deg, #212529, #5c2c06);
+    color: white;
+    padding: 80px 0;
+}
+
+.hero-section h1 {
+    font-weight: 700;
+}
+
+.section-title {
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.feature-card {
+    border: none;
+    border-radius: 16px;
+    transition: 0.2s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-4px);
+}
+
+.market-card {
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.market-card img {
+    height: 180px;
+    object-fit: cover;
+}
+
+.btn-warning {
+    font-weight: 600;
+}
